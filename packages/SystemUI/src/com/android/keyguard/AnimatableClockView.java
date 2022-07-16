@@ -41,6 +41,8 @@ import kotlin.Unit;
 public class AnimatableClockView extends TextView {
     private static final CharSequence DOUBLE_LINE_FORMAT_12_HOUR = "hh\nmm";
     private static final CharSequence DOUBLE_LINE_FORMAT_24_HOUR = "HH\nmm";
+    private static final CharSequence FONT_BROKEN_DOUBLE_LINE_FORMAT_12_HOUR = "hh:mm";
+    private static final CharSequence FONT_BROKEN_DOUBLE_LINE_FORMAT_24_HOUR = "HH:mm";
     private static final long DOZE_ANIM_DURATION = 300;
     private static final long APPEAR_ANIM_DURATION = 350;
     private static final long CHARGE_ANIM_DURATION_PHASE_0 = 500;
@@ -61,6 +63,7 @@ public class AnimatableClockView extends TextView {
     private Runnable mOnTextAnimatorInitialized;
 
     private boolean mIsSingleLine;
+    private boolean mIsBrokenFont;
 
     public AnimatableClockView(Context context) {
         this(context, null, 0, 0);
@@ -268,6 +271,20 @@ public class AnimatableClockView extends TextView {
     void refreshFormat() {
         Patterns.update(mContext);
 
+        String font = mContext.getString(com.android.internal.R.string.config_headlineFontFamily);
+        if (font.equalsIgnoreCase("nothingdot57")
+             || font.equalsIgnoreCase("aclonica-light")
+             || font.equalsIgnoreCase("bariol-light")
+             || font.equalsIgnoreCase("comfortaa-regular")
+             || font.equalsIgnoreCase("coolstory-light")
+             || font.equalsIgnoreCase("jtleonor-bold")
+             || font.equalsIgnoreCase("linotte-bold")
+             || font.equalsIgnoreCase("nokiapure-regular")) {
+           final boolean mIsBrokenFont = true;
+        } else {
+           final boolean mIsBrokenFont = false;
+        }
+
         final boolean use24HourFormat = DateFormat.is24HourFormat(getContext());
         if (mIsSingleLine && use24HourFormat) {
             mFormat = Patterns.sClockView24;
@@ -275,6 +292,10 @@ public class AnimatableClockView extends TextView {
             mFormat = DOUBLE_LINE_FORMAT_24_HOUR;
         } else if (mIsSingleLine && !use24HourFormat) {
             mFormat = Patterns.sClockView12;
+        } else if (!mIsSingleLine && use24HourFormat && mIsBrokenFont) {
+            mFormat = FONT_BROKEN_DOUBLE_LINE_FORMAT_24_HOUR;
+        } else if (!mIsSingleLine && mIsBrokenFont) {
+            mFormat = FONT_BROKEN_DOUBLE_LINE_FORMAT_12_HOUR;
         } else {
             mFormat = DOUBLE_LINE_FORMAT_12_HOUR;
         }

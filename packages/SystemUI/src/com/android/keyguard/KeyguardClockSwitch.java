@@ -120,10 +120,13 @@ public class KeyguardClockSwitch extends RelativeLayout {
              || font.equalsIgnoreCase("jtleonor-bold")
              || font.equalsIgnoreCase("linotte-bold")
              || font.equalsIgnoreCase("nokiapure-regular")) {
-        Typeface fallback = Typeface.create("google-sans", Typeface.NORMAL);
-
-        mClockView.setTypeface(fallback);
-        mLargeClockView.setTypeface(fallback);
+           mClockView.setIncludeFontPadding(false);
+           mLargeClockView.setIncludeFontPadding(false);
+           mLargeClockView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 100);
+        } else {
+           mClockView.setIncludeFontPadding(true);
+           mLargeClockView.setIncludeFontPadding(true);
+           mLargeClockView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 150);
         }
     }
 
